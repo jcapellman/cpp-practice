@@ -1,5 +1,5 @@
 #include <fstream>
-
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -17,6 +17,20 @@ public:
 
 		return true;
 	}
+
+	template <typename T>
+	T static ReadAllText(string fileName)
+	{
+		T objectToRead;
+
+		ifstream file(fileName.c_str());
+
+		file >> objectToRead;
+
+		file.close();
+
+		return objectToRead;
+	}
 };
 
 class Config
@@ -26,15 +40,18 @@ public:
 
 	string RegistrationKey;
 	
-	friend ostream& operator<<(ostream& os, const Config& config);
+	friend ostream& operator<<(ostream& os, const Config& config) {
+		os << config.WebServiceUrl << endl << config.RegistrationKey << endl;
+
+		return os;
+	}
+
+	friend istream& operator>>(istream& is, Config& config) {
+		is >> config.WebServiceUrl >> config.RegistrationKey;
+
+		return is;
+	}
 };
-
-ostream& operator<<(ostream& os, const Config& config)
-{
-	os << config.WebServiceUrl << endl << config.RegistrationKey << endl;
-
-	return os;
-}
 
 int main()
 {
@@ -45,4 +62,10 @@ int main()
 
 	File::WriteAllText("Test", config);
 	
+	Config readConfig;
+
+	readConfig = File::ReadAllText<Config>("Test");
+
+	cout << readConfig.WebServiceUrl << "-" << readConfig.RegistrationKey;
+
 }
