@@ -6,6 +6,13 @@ using namespace std;
 
 class File {
 public:
+	bool static Exists(string fileName)
+	{
+		ifstream file(fileName.c_str());
+
+		return file.good();
+	}
+	
 	template <typename T>
     bool static WriteAllText(string fileName, T objectToWrite)
 	{
@@ -66,6 +73,14 @@ int main()
 
 	readConfig = File::ReadAllText<Config>("Test");
 
-	cout << readConfig.WebServiceUrl << "-" << readConfig.RegistrationKey;
+	cout << readConfig.WebServiceUrl << "-" << readConfig.RegistrationKey << endl;
+
+	bool fileExists = File::Exists("Test");
+
+	cout << "File Exists: " << fileExists << endl;
+
+	bool fileNotExists = File::Exists("Test2");
+
+	cout << "File Exists: " << fileNotExists << endl;
 
 }
